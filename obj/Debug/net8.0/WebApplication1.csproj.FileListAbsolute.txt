@@ -38,3 +38,4 @@ C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\M
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\SharpCompress.dll
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Snappier.dll
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\ZstdSharp.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\obj\Debug\net8.0\WebApplication1.sourcelink.json

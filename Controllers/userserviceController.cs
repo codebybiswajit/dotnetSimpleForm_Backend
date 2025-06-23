@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Model;
 using WebApplication1.Services;
+using WebApplication1.Middleware;
 
 namespace WebApplication1.Controllers
 {
@@ -31,13 +32,25 @@ namespace WebApplication1.Controllers
 
             return Ok(user);
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest login)
+        {
+            var user = await _mongoDBService.LoginAsync(login.UserName, login.Password);
+            if (user == null)
+            {
+                return Unauthorized("Invalid username or password");
+            }
 
-        [HttpPost("create",Name = "CreateUser")]
+            return Ok(user);
+        }
+
+        [HttpPost("create", Name = "CreateUser")]
         public async Task<ActionResult<User>> CreateUser(User user)
         {
             await _mongoDBService.CreateUserAsync(user);
             return CreatedAtRoute("GetUserById", new { id = user.Id }, user);
         }
+
 
         [HttpPut("{id:length(24)}")]
         public async Task<IActionResult> UpdateUser(string id, User user)

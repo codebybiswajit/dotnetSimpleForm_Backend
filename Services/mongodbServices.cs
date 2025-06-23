@@ -12,6 +12,11 @@ namespace WebApplication1.Services
             var database = client.GetDatabase("admin");
             _users = database.GetCollection<User>("Users");
         }
+        public async Task<User> LoginAsync(string username, string password)
+        {
+            return await _users.Find(u => u.UserName == username && u.Password == password).FirstOrDefaultAsync();
+        }
+
 
         public async Task<List<User>> GetUsersAsync()
         {
