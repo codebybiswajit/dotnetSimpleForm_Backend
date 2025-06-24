@@ -39,3 +39,11 @@ C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\S
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Snappier.dll
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\ZstdSharp.dll
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\obj\Debug\net8.0\WebApplication1.sourcelink.json
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll

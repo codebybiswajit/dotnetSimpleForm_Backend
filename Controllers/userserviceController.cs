@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Model;
 using WebApplication1.Services;
 using WebApplication1.Middleware;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -10,78 +12,89 @@ namespace WebApplication1.Controllers
     public class UserServiceController : ControllerBase
     {
         private readonly MongoDBService _mongoDBService;
+        private readonly JwtAuthentication _jwtAuth;
 
-        public UserServiceController(MongoDBService mongoDBService)
+        public UserServiceController(MongoDBService mongoDBService, JwtAuthentication jwtAuth)
         {
             _mongoDBService = mongoDBService;
+            _jwtAuth = jwtAuth;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUsers()
-        {
-            var users = await _mongoDBService.GetUsersAsync();
-            return Ok(users);
-        }
-
-        [HttpGet("{id:length(24)}", Name = "GetUserById")]
-        public async Task<ActionResult<User>> GetUser(string id)
-        {
-            var user = await _mongoDBService.GetUserByIdAsync(id);
-            if (user == null)
-                return NotFound($"User with ID = {id} not found");
-
-            return Ok(user);
-        }
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest login)
         {
             var user = await _mongoDBService.LoginAsync(login.UserName, login.Password);
-            if (user == null)
-            {
-                return Unauthorized("Invalid username or password");
-            }
+            if (user == null) return NotFound("Invalid username or password");
 
-            return Ok(user);
+            var token = _jwtAuth.Authenticate(user.UserName, user.Password, user.Id);
+
+            Response.Cookies.Append("jwt", token, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = false,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddHours(3)
+            });
+
+            return Ok(new { message = "Logged in successfully", token, user });
         }
 
-        [HttpPost("create", Name = "CreateUser")]
-        public async Task<ActionResult<User>> CreateUser(User user)
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateUser(User user)
         {
             await _mongoDBService.CreateUserAsync(user);
-            return CreatedAtRoute("GetUserById", new { id = user.Id }, user);
+            return CreatedAtAction(nameof(GetCurrentUser), new { id = user.Id }, user);
         }
 
-
-        [HttpPut("{id:length(24)}")]
-        public async Task<IActionResult> UpdateUser(string id, User user)
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var existingUser = await _mongoDBService.GetUserByIdAsync(id);
-            if (existingUser == null)
-                return NotFound($"User with ID = {id} not found");
+            var mongoId = User.FindFirstValue("mongoId");
+            if (string.IsNullOrEmpty(mongoId)) return Unauthorized();
 
-            var updatedUser = new User
-            {
-                Id = existingUser.Id,
-                Name = string.IsNullOrWhiteSpace(user.Name) ? existingUser.Name : user.Name,
-                Email = string.IsNullOrWhiteSpace(user.Email) ? existingUser.Email : user.Email,
-                Password = string.IsNullOrWhiteSpace(user.Password) ? existingUser.Password : user.Password,
-                Dob = string.IsNullOrWhiteSpace(user.Dob) ? existingUser.Dob : user.Dob
-            };
-
-            await _mongoDBService.UpdateUserAsync(id, updatedUser);
-            return NoContent();
+            var user = await _mongoDBService.GetUserByIdAsync(mongoId);
+            return user == null ? NotFound() : Ok(user);
         }
 
-
-        [HttpDelete("{id:length(24)}")]
-        public async Task<IActionResult> DeleteUser(string id)
+        [Authorize]
+        [HttpPut("me")]
+        public async Task<IActionResult> UpdateCurrentUser([FromBody] User input)
         {
-            var user = await _mongoDBService.GetUserByIdAsync(id);
-            if (user == null)
-                return NotFound($"User with ID = {id} not found");
+            var mongoId = User.FindFirstValue("mongoId");
+            if (string.IsNullOrEmpty(mongoId)) return Unauthorized();
 
-            await _mongoDBService.DeleteUserAsync(id);
-            return Ok($"Deleted user with ID = {id}");
+            var user = await _mongoDBService.GetUserByIdAsync(mongoId);
+            if (user == null) return NotFound();
+
+            user.Name = input.Name ?? user.Name;
+            user.Email = input.Email ?? user.Email;
+            user.Password = input.Password ?? user.Password;
+            user.Dob = input.Dob ?? user.Dob;
+
+            await _mongoDBService.UpdateUserAsync(mongoId, user);
+            return Ok("User updated successfully");
         }
+
+        [Authorize]
+        [HttpDelete("me")]
+        public async Task<IActionResult> DeleteCurrentUser()
+        {
+            var mongoId = User.FindFirstValue("mongoId");
+            if (string.IsNullOrEmpty(mongoId)) return Unauthorized();
+
+            var user = await _mongoDBService.GetUserByIdAsync(mongoId);
+            if (user == null) return NotFound();
+
+            await _mongoDBService.DeleteUserAsync(mongoId);
+            return Ok("Account deleted");
+        }
+
+        [HttpGet("get-all-user")]
+        public async Task<IActionResult> GetUsers()
+        {
+            return Ok(await _mongoDBService.GetUsersAsync());
+        }
+        
     }
 }
