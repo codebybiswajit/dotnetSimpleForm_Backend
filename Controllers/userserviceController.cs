@@ -4,6 +4,7 @@ using WebApplication1.Model;
 using WebApplication1.Services;
 using WebApplication1.Middleware;
 using System.Security.Claims;
+using Microsoft.AspNetCore.HttpLogging;
 
 namespace WebApplication1.Controllers
 {
@@ -89,12 +90,21 @@ namespace WebApplication1.Controllers
             await _mongoDBService.DeleteUserAsync(mongoId);
             return Ok("Account deleted");
         }
+        [Authorize]
+        [HttpPatch("logout/me")]
+        public async Task<IActionResult> LogOut()
+        {
+            var mongoId = User.FindFirstValue("mongoId");
+            Response.Cookies.Delete("jwt");
+            return Ok("Logout Successfully");
+        }
+
 
         [HttpGet("get-all-user")]
         public async Task<IActionResult> GetUsers()
         {
             return Ok(await _mongoDBService.GetUsersAsync());
         }
-        
+
     }
 }
