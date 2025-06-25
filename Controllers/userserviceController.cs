@@ -39,7 +39,7 @@ namespace WebApplication1.Controllers
 
             return Ok(new { message = "Logged in successfully", token, user });
         }
-
+        [AllowAnonymous]
         [HttpPost("create")]
         public async Task<IActionResult> CreateUser(User user)
         {
