@@ -94,7 +94,7 @@ namespace WebApplication1.Controllers
         [HttpPatch("logout/me")]
         public async Task<IActionResult> LogOut()
         {
-            var mongoId = User.FindFirstValue("mongoId");
+            User.FindFirstValue("mongoId");
             Response.Cookies.Delete("jwt");
             return Ok("Logout Successfully");
         }

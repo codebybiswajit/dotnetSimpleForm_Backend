@@ -15,9 +15,9 @@ namespace WebApplication1.Middleware
 
         public JwtAuthentication(IConfiguration configuration)
         {
-            _secretKey = configuration["JwtTokens:SecretKey"];
-            _issuer = configuration["JwtTokens:Issuer"];
-            audience = configuration["JwtTokens:Audience"];
+            _secretKey = configuration["JwtBearer:SecretKey"];
+            _issuer = configuration["JwtBearer:Issuer"];
+            audience = configuration["JwtBearer:Audience"];
         }
 
       public string Authenticate(string userName, string password, string mongoId)

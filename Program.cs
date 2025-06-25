@@ -10,13 +10,11 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var configuration = sp.GetRequiredService<IConfiguration>();
-    var connectionString = configuration["MongoDB:ConnectionURI"];
+    var connectionString = configuration["MongoDB:ConnectionUrl"];
     return new MongoClient(connectionString);
 });
 
@@ -37,10 +35,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-var jwtSettings = builder.Configuration.GetSection("JwtTokens");
+var jwtSettings = builder.Configuration.GetSection("JwtBearer");
 var secretKey = jwtSettings["SecretKey"];
 var issuer = jwtSettings["Issuer"];
-var audienceRaw = builder.Configuration["JwtTokens:Audience"];
+var audienceRaw = builder.Configuration["JwtBearer:Audience"];
 var audiences = audienceRaw?.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 var expiry = jwtSettings["Expiry"];
 
