@@ -3,9 +3,11 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace WebApplication1.Model
 {
-    public enum UserRole {
-        admin,user
-    }
+    // public enum UserRole
+    // {
+    //     admin,
+    //     user
+    // }
     public class User
     {
         [BsonId]
@@ -49,8 +51,10 @@ namespace WebApplication1.Model
             [BsonElement("percentage")]
             public string Percentage { get; set; } = String.Empty;
         }
-        [BsonElement("roll")]
-        public UserRole role { get; set; } = UserRole.user;
+        [BsonElement("role")]
+        // [BsonRepresentation(BsonType.String)]
+        // public UserRole Role { get; set; } = UserRole.user;
+        public string Role { get; set; } = "user";
         [BsonElement("createdAt")]
         public string CreatedAt { get; set; } = DateTime.UtcNow.ToString();
 

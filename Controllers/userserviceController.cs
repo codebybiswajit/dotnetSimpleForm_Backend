@@ -47,6 +47,20 @@ namespace WebApplication1.Controllers
             return CreatedAtAction(nameof(GetCurrentUser), new { id = user.Id }, user);
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var user = await _mongoDBService.GetUserByIdAsync(id);
+
+            if (user == null)
+            {
+                return NotFound(new { message = "User not found." });
+            }
+
+            await _mongoDBService.DeleteUserAsyncbyid(id);
+            return Ok(new { message = "User deleted successfully." });
+        }
+
         [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
@@ -101,9 +115,65 @@ namespace WebApplication1.Controllers
 
 
         [HttpGet("get-all-user")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers(int startPage = 1, int limit = 2)
         {
-            return Ok(await _mongoDBService.GetUsersAsync());
+            var users = await _mongoDBService.GetUsersAsync(startPage, limit);
+            var totalCount = await _mongoDBService.TottalCount();
+            return Ok(new
+            {
+               user  =  users, totalCount
+            });
+        }
+        [HttpGet("get-all-user/ascending")]
+        public async Task<IActionResult> GetUsersAscending(int startPage = 1 , int limit = 2)
+        {
+            var users = await _mongoDBService.GetUsersAsync( startPage , limit);
+            var totalCount = await _mongoDBService.TottalCount();
+            var sortedUsers = users.OrderBy(user => user.Name);
+            return Ok(new
+            {
+               user  =  sortedUsers, totalCount
+            });
+        }
+        [HttpGet("get-all-user/descending")]
+        public async Task<IActionResult> GetUsersDescending(int startPage = 1 ,int limit = 2)
+        {
+            var users = await _mongoDBService.GetUsersAsync( startPage , limit);
+            var totalCount = await _mongoDBService.TottalCount();
+            var sortedUsers = users.OrderByDescending(user => user.Name);
+            return Ok(new
+            {
+               user  =  sortedUsers, totalCount
+            });;
+        }
+        [HttpGet("get-all-user/created/descending")]
+        public async Task<IActionResult> GetUsersCreateDescending(int startPage = 1,int limit = 2)
+        {
+            var users = await _mongoDBService.GetUsersAsync( startPage , limit);
+            var totalCount = await _mongoDBService.TottalCount();
+            var sortedUsers = users.OrderByDescending(user => user.CreatedAt);
+            return Ok(new
+            {
+               user  =  sortedUsers, totalCount
+            });;
+        }
+        [HttpGet("get-all-user/created/ascending")]
+        public async Task<IActionResult> GetUsersCreateAscending(int startPage = 1,int limit= 2) 
+        {
+            var users = await _mongoDBService.GetUsersAsync(startPage,limit);
+            var totalCount = await _mongoDBService.TottalCount();
+            var sortedUsers = users.OrderBy(user => user.CreatedAt);
+            return Ok(new
+            {
+               user  =  sortedUsers, totalCount
+            });;
+        }
+        [HttpGet("get-all-user/created/ascending/pagination")]
+        public async Task<IActionResult> GetUsersCreateAscendingPagination(int startPage = 1)
+        { 
+
+            // var sortedUsers = users.OrderBy(user => user.CreatedAt);
+            return Ok(await _mongoDBService.GetUsersAsyncPagination(startPage));
         }
 
     }
