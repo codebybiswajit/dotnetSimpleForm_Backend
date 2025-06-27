@@ -47,3 +47,4 @@ C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\M
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\CT_USER\source\repos\WebApplication1\WebApplication1\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
