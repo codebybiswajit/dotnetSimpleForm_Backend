@@ -115,7 +115,7 @@ namespace WebApplication1.Controllers
 
 
         [HttpGet("get-all-user")]
-        public async Task<IActionResult> GetUsers(int startPage = 1, int limit = 2)
+        public async Task<IActionResult> GetUsers(int startPage = 0, int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync(startPage, limit);
             var totalCount = await _mongoDBService.TottalCount();
@@ -125,7 +125,7 @@ namespace WebApplication1.Controllers
             });
         }
         [HttpGet("get-all-user/ascending")]
-        public async Task<IActionResult> GetUsersAscending(int startPage = 1 , int limit = 2)
+        public async Task<IActionResult> GetUsersAscending(int startPage = 0 , int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync( startPage , limit);
             var totalCount = await _mongoDBService.TottalCount();
@@ -136,7 +136,7 @@ namespace WebApplication1.Controllers
             });
         }
         [HttpGet("get-all-user/descending")]
-        public async Task<IActionResult> GetUsersDescending(int startPage = 1 ,int limit = 2)
+        public async Task<IActionResult> GetUsersDescending(int startPage = 0 ,int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync( startPage , limit);
             var totalCount = await _mongoDBService.TottalCount();
@@ -147,7 +147,7 @@ namespace WebApplication1.Controllers
             });;
         }
         [HttpGet("get-all-user/created/descending")]
-        public async Task<IActionResult> GetUsersCreateDescending(int startPage = 1,int limit = 2)
+        public async Task<IActionResult> GetUsersCreateDescending(int startPage = 0,int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync( startPage , limit);
             var totalCount = await _mongoDBService.TottalCount();
@@ -158,7 +158,7 @@ namespace WebApplication1.Controllers
             });;
         }
         [HttpGet("get-all-user/created/ascending")]
-        public async Task<IActionResult> GetUsersCreateAscending(int startPage = 1,int limit= 2) 
+        public async Task<IActionResult> GetUsersCreateAscending(int startPage = 0,int limit= 2) 
         {
             var users = await _mongoDBService.GetUsersAsync(startPage,limit);
             var totalCount = await _mongoDBService.TottalCount();
@@ -169,7 +169,7 @@ namespace WebApplication1.Controllers
             });;
         }
         [HttpGet("get-all-user/created/ascending/pagination")]
-        public async Task<IActionResult> GetUsersCreateAscendingPagination(int startPage = 1)
+        public async Task<IActionResult> GetUsersCreateAscendingPagination(int startPage = 0)
         { 
 
             // var sortedUsers = users.OrderBy(user => user.CreatedAt);
