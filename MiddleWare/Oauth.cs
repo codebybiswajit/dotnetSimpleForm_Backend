@@ -48,9 +48,6 @@ namespace WebApplication1.Middleware
 
     var token = tokenHandler.CreateToken(tokenDescriptor);
     return tokenHandler.WriteToken(token);
-
-
         }
-
     }
 }
