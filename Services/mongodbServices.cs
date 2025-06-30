@@ -36,7 +36,7 @@ namespace WebApplication1.Services
                 .Limit(pageSize)
                 .ToListAsync();
         }
-        public async Task<long> TottalCount()
+        public async Task<long> TotalCount()
         {
             var totalCount = await _users.CountDocumentsAsync(_ => true);
             return totalCount;

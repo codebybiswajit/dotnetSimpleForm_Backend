@@ -118,7 +118,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetUsers(int startPage = 0, int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync(startPage, limit);
-            var totalCount = await _mongoDBService.TottalCount();
+            var totalCount = await _mongoDBService.TotalCount();
             return Ok(new
             {
                user  =  users, totalCount
@@ -128,7 +128,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetUsersAscending(int startPage = 0 , int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync( startPage , limit);
-            var totalCount = await _mongoDBService.TottalCount();
+            var totalCount = await _mongoDBService.TotalCount();
             var sortedUsers = users.OrderBy(user => user.Name);
             return Ok(new
             {
@@ -139,7 +139,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetUsersDescending(int startPage = 0 ,int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync( startPage , limit);
-            var totalCount = await _mongoDBService.TottalCount();
+            var totalCount = await _mongoDBService.TotalCount();
             var sortedUsers = users.OrderByDescending(user => user.Name);
             return Ok(new
             {
@@ -150,7 +150,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetUsersCreateDescending(int startPage = 0,int limit = 2)
         {
             var users = await _mongoDBService.GetUsersAsync( startPage , limit);
-            var totalCount = await _mongoDBService.TottalCount();
+            var totalCount = await _mongoDBService.TotalCount();
             var sortedUsers = users.OrderByDescending(user => user.CreatedAt);
             return Ok(new
             {
@@ -161,7 +161,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> GetUsersCreateAscending(int startPage = 0,int limit= 2) 
         {
             var users = await _mongoDBService.GetUsersAsync(startPage,limit);
-            var totalCount = await _mongoDBService.TottalCount();
+            var totalCount = await _mongoDBService.TotalCount();
             var sortedUsers = users.OrderBy(user => user.CreatedAt);
             return Ok(new
             {
