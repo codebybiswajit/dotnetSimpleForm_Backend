@@ -1,10 +1,12 @@
 using System.Security.Claims;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using WebApplication1.Model;
 
 namespace WebApplication1.Services
 {
+
     public class MongoDBService
     {
         private readonly IMongoCollection<User> _users;
@@ -19,17 +21,35 @@ namespace WebApplication1.Services
             return await _users.Find(u => u.UserName == username && u.Password == password).FirstOrDefaultAsync();
         }
 
+        // public class userData
+        // {
+        //     public string Id { get; set; }
+        //     public string Name { get; set; }
+        //     public string Email { get; set; }
+
+        // }
         public async Task<List<User>> GetUsersAsync(int startPage, int limit)
         {
-            var totalCount = await _users.CountDocumentsAsync((_ => true));
-            return await _users.Find(_ => true)
-            .Limit(limit)
-            .Skip((startPage - 1) * limit)
-            .ToListAsync();
+            var users = await _users
+                .Find(_ => true)
+                .Project<User>(Builders<User>.Projection.Exclude(u => u.Password)
+            .Exclude(u => u.ConfirmPassword))
+                // .Project(user => new userData
+                // {
+                //     Id = user.Id,
+                //     Name = user.Name,
+                //     Email = user.Email
+                // })
+                .Skip((startPage - 1) * limit)
+                .Limit(limit)
+                .ToListAsync();
+
+            return users;
         }
+
         public async Task<List<User>> GetUsersAsyncPagination(int startPage)
         {
-            
+
             var pageSize = 3;
             return await _users.Find(_ => true)
                 .Skip((startPage - 1) * pageSize)
@@ -52,10 +72,11 @@ namespace WebApplication1.Services
             await _users.InsertOneAsync(user);
         }
 
-        public async Task DeleteUserAsyncbyid(string id) {
+        public async Task DeleteUserAsyncbyid(string id)
+        {
             await _users.DeleteOneAsync(u => u.Id == id);
         }
-       
+
         public async Task UpdateUserAsync(string id, User user)
         {
             await _users.ReplaceOneAsync(u => u.Id == id, user);
